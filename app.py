@@ -1,20 +1,26 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from dotenv import load_dotenv
 import mysql.connector
 from mysql.connector import Error
 from datetime import datetime
+import os
+
+# Cargar variables desde .env
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "default_secret_key")
 
-# Configuración de la base de datos
+# Configuración de la base de datos desde .env
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '',
-    'database': 'cloudcontacts_db'
+    'host': os.getenv("DB_HOST"),
+    'user': os.getenv("DB_USER"),
+    'password': os.getenv("DB_PASSWORD"),
+    'database': os.getenv("DB_NAME"),
+    'port': int(os.getenv("DB_PORT"))
 }
 
-# Conexión a la base de datos
+# Función de conexión a la BD
 def get_db_connection():
     try:
         conn = mysql.connector.connect(**db_config)
@@ -23,7 +29,7 @@ def get_db_connection():
         print(f"Error al conectar a la BD: {e}")
         return None
 
-# Página de inicio con formulario
+# Página de inicio (formulario)
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
@@ -48,8 +54,9 @@ def index():
             )
             conn.commit()
             flash("Contacto agregado correctamente", "success")
+
         except mysql.connector.IntegrityError:
-            flash("Correo electrónico ya registrado", "error")
+            flash("El correo electrónico ya está registrado", "error")
         except Exception as e:
             flash(f"Error al guardar contacto: {e}", "error")
         finally:
@@ -65,6 +72,7 @@ def index():
 def contacts():
     conn = get_db_connection()
     contacts_list = []
+
     if not conn:
         flash("Error de conexión a la base de datos", "error")
     else:
@@ -78,4 +86,4 @@ def contacts():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
