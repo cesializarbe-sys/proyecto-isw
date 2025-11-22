@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4 text-center">Lista de Contactos</h1>
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border rounded shadow">
+        <thead>
+            <tr class="bg-blue-600 text-white">
+                <th class="py-2 px-4">ID</th>
+                <th class="py-2 px-4">Nombre</th>
+                <th class="py-2 px-4">Correo</th>
+                <th class="py-2 px-4">TelÃ©fono</th>
+                <th class="py-2 px-4">Fecha y Hora</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+            <tr class="border-t">
+                <td class="py-2 px-4">{{ contact.id }}</td>
+                <td class="py-2 px-4">{{ contact.name }}</td>
+                <td class="py-2 px-4">{{ contact.email }}</td>
+                <td class="py-2 px-4">{{ contact.phone or '-' }}</td>
+                <td class="py-2 px-4">{{ contact.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center py-4">No hay contactos registrados</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
