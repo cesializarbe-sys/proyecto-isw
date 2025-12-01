@@ -20,7 +20,7 @@ db_config = {
     'port': int(os.getenv("DB_PORT"))
 }
 
-# Función de conexión a la BD
+# Función de conexión a la Base de datos
 def get_db_connection():
     try:
         conn = mysql.connector.connect(**db_config)
