@@ -29,7 +29,7 @@ def get_db_connection():
         print(f"Error al conectar a la BD: {e}")
         return None
 
-# Página de inicio (formulario)
+# Página de inicio con formulario)
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
